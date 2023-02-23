@@ -3,7 +3,7 @@ package Questions;
 import java.sql.*;
 
 public class Question2 {
-    // 13- What are the top 3 most rented movies which have a category of ‘Action’?
+    // 2-Find the staff’s name, username and password who is working in the store that sells “Glass Dying” film
 
     public static void answer() throws SQLException{
         //1- Get a connection to DB
@@ -16,23 +16,20 @@ public class Question2 {
         Statement statement = connection.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE,ResultSet.CONCUR_READ_ONLY);
 
         // 3- execute a query
-        String query = "SELECT title,COUNT(*) AS rent_count\n" +
-                "FROM rental\n" +
-                "INNER JOIN inventory ON rental.inventory_id = inventory.inventory_id\n" +
-                "INNER JOIN film_category ON inventory.film_id = film_category.film_id\n" +
-                "INNER JOIN category ON film_category.category_id = category.category_id\n" +
-                "INNER JOIN film ON inventory.film_id = film.film_id\n" +
-                "WHERE name = 'Action'\n" +
-                "GROUP BY title\n" +
-                "ORDER BY COUNT(rental_id) DESC\n" +
-                "LIMIT 3\n";
+        String query = "SELECT DISTINCT CONCAT(staff.first_name, ' ',staff.last_name) AS full_name,username,password\n" +
+                "FROM staff\n" +
+                "JOIN store ON staff.store_id = store.store_id\n" +
+                "JOIN inventory ON store.store_id = inventory.store_id\n" +
+                "JOIN film ON inventory.film_id = film.film_id\n" +
+                "WHERE title = 'Glass Dying'\n";
         ResultSet resultSet = statement.executeQuery(query);
 
         // 4- process the resultSet
         int count = 1;
         while (resultSet.next()) {
-            System.out.println(count++ + " " + resultSet.getObject("title") +
-                    " " + resultSet.getObject("rent_count"));
+            System.out.println(count++ + " " + resultSet.getObject("full_name") +
+                    " " + resultSet.getObject("username") +
+                    " " + resultSet.getObject("password"));
         }
     }
 }
