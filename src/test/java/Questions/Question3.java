@@ -17,14 +17,13 @@ public class Question3 {
         Statement statement = connection.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE,ResultSet.CONCUR_READ_ONLY);
 
         // 3- execute a query
-        String query = "SELECT name AS category_name\n" +
-                "FROM category\n" +
-                "JOIN film_category ON category.category_id = film_category.category_id\n" +
-                "JOIN inventory ON film_category.film_id = inventory.film_id\n" +
-                "JOIN store ON inventory.store_id = store.store_id\n" +
-                "WHERE store.store_id = 1\n" +
+        String query = "SELECT name\n" +
+                "FROM category c\n" +
+                "JOIN film_category fc ON c.category_id = fc.category_id\n" +
+                "JOIN inventory i ON fc.film_id = i.film_id\n" +
+                "JOIN store s ON i.store_id = s.store_id\n" +
+                "WHERE s.store_id = 1\n" +
                 "GROUP BY name\n" +
-                "HAVING (COUNT(*) > 150)\n" +
                 "ORDER BY COUNT(*) DESC\n" +
                 "LIMIT 5";
         ResultSet resultSet = statement.executeQuery(query);
@@ -32,7 +31,7 @@ public class Question3 {
         // 4- process the resultSet
         int count = 0;
         while (resultSet.next()) {
-            System.out.println(++count + " " + resultSet.getObject("category_name"));
+            System.out.println(++count + " " + resultSet.getObject("name"));
         }
     }
 }
